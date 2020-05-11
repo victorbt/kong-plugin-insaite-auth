@@ -1,23 +1,12 @@
-local typedefs = require "kong.db.schema.typedefs"
-
--- Grab pluginname from module name
-local plugin_name = "insaite-auth"
-
-local schema = {
-  name = plugin_name,
+return {
+  no_consumer = false, -- this plugin is available on APIs as well as on Consumers,
+  no_consumer = true, -- this plugin is available only on APIs
   fields = {
+    -- Describe your plugin's configuration's schema here.
+
     url = {required = true, type = "string"},
-    response = { required = true, default = "table", type = "string", enum = {"table", "string"}},
+    response = { required = true, default = "table", type = "string", enum = {"table"}},
     timeout = { default = 10000, type = "number" },
     keepalive = { default = 60000, type = "number" }
-    },
   },
 }
-
--- run_on_first typedef/field was removed in Kong 2.x
--- try to insert it, but simply ignore if it fails
-pcall(function()
-        table.insert(schema.fields, { run_on = typedefs.run_on_first })
-      end)
-
-return schema

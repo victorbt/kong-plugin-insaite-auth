@@ -115,25 +115,26 @@ function _M.execute(conf)
     return kong_response.exit(status_code, { message = "Not Authorized" })
   end
 
-  -- local response_body
+  local response_body
 
-  -- if conf.response == "table" then 
-  --   response_body = JSON:decode(string.match(body, "%b{}"))
-  -- else
-  --   response_body = string.match(body, "%b{}")
-  -- end
+  if conf.response == "table" then 
+    response_body = JSON:decode(string.match(body, "%b{}"))
+  else
+    response_body = string.match(body, "%b{}")
+  end
 
-  -- local body_data = get_body()
-  -- local json_body_data = JSON:decode(body_data)
-
-  -- for k, v in pairs(response_body) do
-  --   ngx.log(ngx.ERR, k, v)
-  --   json_body_data[k] = v
-  -- end
+  local body_data = get_body()
   
-  -- ngx.req.init_body(128 * 1024) 
-  -- append_body(JSON:encode(json_body_data))
-  -- ngx.req.finish_body()
+  local json_body_data = JSON:decode(body_data)
+
+  for k, v in pairs(response_body) do
+    ngx.log(ngx.ERR, k, v)
+    json_body_data[k] = v
+  end
+  
+  ngx.req.init_body(128 * 1024) 
+  append_body(JSON:encode(json_body_data))
+  ngx.req.finish_body()
 
 end
 
